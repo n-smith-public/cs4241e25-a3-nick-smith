@@ -1,0 +1,126 @@
+/* The hex codes of the colour pallette */
+:root {
+  --base: #f5eed0;
+  --option: #000;
+  --highlight: #ff5800;
+}
+
+/* Site-wide properties */
+html {
+  background-color: var(--base);
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 15px;
+  color: var(--option);
+}
+
+/* Site content */
+body {
+  width: 75%;
+  margin: auto;
+  padding: 15px;
+  line-height: 1.5;
+}
+
+/* Header Content */
+.header-logo {
+  display: flex;
+  align-items: center;
+  margin: auto;
+  justify-content: space-between;
+}
+
+/* Task Submission */
+#taskForm {
+  display: block;
+}
+
+.req {
+  color: var(--highlight);
+}
+
+label {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: var(--option);
+}
+
+.field {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1rem;
+  border: 1px solid var(--option);
+  border-radius: 0.25rem;
+  background-color: var(--base);
+  box-sizing: border-box;
+  margin-bottom: 1rem;
+}
+
+#addTask {
+  background-color: var(--option);
+  color: var(--base);
+  font-size: 1.25rem;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  font-weight: bold;
+  margin-top: 2rem;
+  outline: none;
+}
+
+/* Add a hover effect to the task submission button for coolness factor */
+#addTask:hover {
+  animation: highlightGradientIn 1s forwards;
+}
+
+/* Once the user is not hovering over the button, return to original state */
+#addTask:not(:hover) {
+  animation: highlightGradientOut 1s forwards;
+}
+
+/* Animation is handled using keyframes, originally from my own project last summer */
+@keyframes highlightGradientIn {
+  from {
+    background-color: var(--option);
+    transform: scale(1.00);
+  }
+
+  to {
+    background-color: var(--highlight);
+    transform: scale(1.10);
+  }
+}
+
+@keyframes highlightGradientOut {
+  from {
+    background-color: var(--highlight);
+    transform: scale(1.10);
+  }
+
+  to {
+    background-color: var(--option);
+    transform: scale(1.00);
+  }
+}
+
+/* Task List */
+#taskList {
+  background-color: var(--base);
+  border: var(--option) 1px solid;
+  border-radius: 0.25rem;
+  padding: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+th {
+  text-align: left;
+  font-size: 1rem;
+}
+
+td {
+  font-size: 1rem;
+}
+
+.urgent {
+  color: var(--highlight);
+  font-weight: bold;
+}

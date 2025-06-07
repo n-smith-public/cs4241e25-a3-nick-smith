@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>CS4241 Assignment 2</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="js/main.js"></script>
+    <link rel="stylesheet" href="css/main.css">
+    <!-- This is used for an alert on marking a task as completed. -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    
+    <!-- get rid of favicon error -->
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  </head>
+  <body>
+    <!-- Exact same as in index.html -->
+    <header>
+      <div id="header-logo">
+        <div style="display: flex; align-items: center;">
+          <img id="logo" src="media/Magnolia.png" alt="Magnolia" style="height: 50px; width: auto; margin-right: 10px;">
+          <h1>Magnolia</h1>
+        </div>
+      </div>
+      <p>
+        Magnolia Task Manager - Return to <a href="/">home</a> to add new task.
+      </p>
+    </header>
+    <hr>
+   
+    <!-- This table automatically pulls all of the tasks and displays them to the user. Not fully optimised for mobile usage, but would require some weird changes to make it work as desired. -->
+    <table id="taskList">
+        <tr>
+            <th>Task Name</th>
+            <th>Task Description</th>
+            <th>Due Date</th>
+            <th>Priority</th>
+            <th>Deadline</th>
+            <th>Completed</th>
+        </tr>
+
+        <tbody id="taskTableBody"></tbody>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>CS4241 Assignment 2</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="js/main.js"></script>
+    <link rel="stylesheet" href="css/main.css">
+    <!-- Used to alert the user that the task was submitted successfully. -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    
+    <!-- get rid of favicon error -->
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  </head>
+  <body>
+    <!-- Header of the page, shared across all pages -->
+    <header>
+      <div id="header-logo">
+        <div style="display: flex; align-items: center;">
+          <img id="logo" src="media/Magnolia.png" alt="Magnolia" style="height: 50px; width: auto; margin-right: 10px;">
+          <h1>Magnolia</h1>
+        </div>
+      </div>
+      <p>
+        Welcome to Magnolia, the premiere web application for managing your tasks. What are you waiting for? Start today!
+      </p>
+    </header>
+    <hr>
+    <!-- Task Submission Form. All entries are required. -->
+    <form id="taskForm">
+      <br>
+      <label for="taskName">Task Name<span class="req"> *</span></label>
+      <input type="text" id="taskName" value="" required class="field">
+      <br>
+      <label for="taskDescription">Task Description<span class="req"> *</span></label>
+      <input type="text" id="taskDescription" value="" required class="field">
+      <br>
+      <!-- datetime-local allows the user to put in a date as well as a time in hours:minutes seconds. -->
+      <label for="taskDueDate">Task Due Date<span class="req"> *</span></label>
+      <input type="datetime-local" id="taskDueDate" value="" required class="field">
+      <br>
+      <label for="taskPriority">Task Priority<span class="req"> *</span></label>
+      <!-- This is a selectbox dropdown, which allows user to pick one of the three options -->
+      <select id="taskPriority" required class="field">
+        <option value="" disabled selected>Select priority</option>
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+      <br>
+      <button id="addTask">Add Task</button>
+    </form>
+    <!-- Was added because all pages need to be visible from the home page. Is a little weird to have here when no tasks are added, but works regardless. -->
+    <footer>
+      <hr>
+      <p>
+        Magnolia Task Manager - View your <a href="/tasks">tasks</a>.
+      </p>
+      <p>
+        <small>CS4241 Assignment 2</small>
+      </p>
+    </footer>
+  </body>
+</html>
