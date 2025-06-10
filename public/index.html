@@ -4,15 +4,14 @@
     <title>Add New Task</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Magnolia is a task management application that allows users to safely and securely manage all of lifes tasks.">
     <script src="js/main.js"></script>
     <link rel="stylesheet" href="css/main.css">
-    <!-- Used to alert the user that the task was submitted successfully. -->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    
-    <!-- get rid of favicon error -->
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
   </head>
   <body>
+    <!-- Settings Menu -->
     <div id="settings">
       <button id="btn">
           <span role="img" aria-label="Settings" style="font-size: 24px;">&#9881;</span>
@@ -21,6 +20,7 @@
         <button id="displayName" class="pure-button">Change Display Name</button>
       </div>
     </div>
+
     <!-- Header of the page, shared across all pages -->
     <header>
       <div id="header-logo" style="display: flex; align-items: center;">
@@ -33,6 +33,7 @@
       </div>
     </header>
     <hr>
+
     <!-- Task Submission Form. All entries are required. -->
     <form id="taskForm">
       <br>
@@ -57,7 +58,7 @@
       <br>
       <button id="addTask">Add Task</button>
     </form>
-    <!-- Was added because all pages need to be visible from the home page. Is a little weird to have here when no tasks are added, but works regardless. -->
+
     <footer>
       <hr>
       <p>
@@ -68,49 +69,60 @@
       </p>
     </footer>
   </body>
-  <script>
-    function getCookie(name) {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop().split(';').shift();
-    }
 
+  <script>
+    // On loading the page, run the following script
     document.addEventListener('DOMContentLoaded', () => {
+      // Store references to the elements we will interact with
       const greeting = document.getElementById('greeting');
       const logoutBtn = document.getElementById('logoutBtn');
 
       // Get the username from the cookie
       const displayName = getCookie('displayName');
+      // If the displayName cookie exists, set the greeting text accordingly
       if (displayName) {
         greeting.textContent = `Welcome, ${displayName}, to Magnolia! Magnolia is the premiere web application for managing your tasks. What are you waiting for? Start today!`;
       } else {
+        // Otherwise, set a generic greeting. This should never happen, as every logged in user has a display name.
         greeting.textContent = 'Welcome!';
       }
 
+      // --Settings Setup--
+      // Store references to the settings button and dropdown menu
       const gear = document.getElementById('btn');
       const dropdown = document.getElementById('settingsMenu');
       const displayNameBtn = document.getElementById('displayName');
 
+      // If both options exist
       if (gear && dropdown) {
+        // Add an on-click listener to the gear icon
         gear.addEventListener('click', function(e) {
+          // If it is clicked, toggle the dropdown
           e.stopPropagation();
           dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
         });
 
+        // If click outside of the dropdown, close it
         document.addEventListener('click', function() {
           dropdown.style.display = 'none';
         });
 
+        // Prevent the dropdown from closing when clicked inside
         dropdown.addEventListener('click', function(e) {
           e.stopPropagation();
         });
       }
 
+      // If the displayName button exists, add an event listener to it
       if (displayNameBtn) {
         displayNameBtn.addEventListener('click', async function()  {
+          // Get the user's current display name from the cookie
           const currentName = getCookie('displayName') || '';
+          // Prompt the user for a new display name
           const newName = prompt('Enter your new display name:', currentName);
+          // The new name must not be empty, and must not be the same as the current name. It also trims whitespace.
           if (newName && newName.trim() && newName !== currentName) {
+            // If the new name is valid, send a POST request to update the display name
             const res = await fetch('/updateDisplayName', {
               method: 'POST',
               headers: {
@@ -119,6 +131,7 @@
               body: JSON.stringify({ displayName: newName.trim() })
             });
             const result = await res.json();
+            // If the request was successful, update the cookie and reload the page
             if (result.status === 'success') {
               document.cookie = `displayName=${encodeURIComponent(newName.trim())}; path=/`;
               swal('Success', 'Display name updated successfully!', 'success').then(() => location.reload());
@@ -130,6 +143,7 @@
       }
     });
 
+    // If the logout button is clicked, redirect to the logout endpoint
     logoutBtn.addEventListener('click', () => {
       window.location.replace('/logout');
     });

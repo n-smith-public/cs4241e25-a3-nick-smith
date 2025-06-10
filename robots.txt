@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /
+
+User-agent: AbsBot-Google
+Disallow: /

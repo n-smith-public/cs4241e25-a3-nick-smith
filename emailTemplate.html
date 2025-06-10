@@ -3,8 +3,10 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- This is never visible on the website, and is only used to send OTP -->
         <title>Magnolia Login OTP</title>
         <style>
+            /* Emails can't pull CSS from server, so need to provide directly */
             html {
                 background-color: #f5eed0;
                 font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -28,6 +30,7 @@
         </style>
     </head>
     <body>
+        <!-- Same as site-wide header, but uses a free photo hosting service for the company logo -->
         <header>
             <div id="header-logo">
                 <div style="display: flex; align-items: center;">
@@ -37,6 +40,7 @@
             </div>
         </header>
         <hr>
+        <!-- This is the same text as I used for my first web-dev project, so the formatting is a little strange. -->
         <p>Hello! You have attempted to login to Magnolia. If this was not done by you, please ignore this email.</p>
         <p>If this was you, please enter the following One-Time Password (OTP) into the prompt on Magnolia.</p>
         <p>Please note that this code will expire after <b>5 minutes.</b></p>

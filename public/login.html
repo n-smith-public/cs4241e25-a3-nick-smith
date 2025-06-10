@@ -3,10 +3,12 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Magnolia is a task management application that allows users to safely and securely manage all of lifes tasks.">
         <title>Login</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic">
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <style>
+            /* This is needed due to the mix between Picnic and my sites CSS */
             html {
                 font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
             }
@@ -39,6 +41,7 @@
         </style>
     </head>
     <body>
+        <!-- Site-wide Header -->
         <header>
             <div id="header-logo">
                 <div style="display: flex; align-items: center;">
@@ -49,11 +52,14 @@
             <p>Welcome to Magnolia. Please log in or <a href="/register">register</a> to continue</p>
         </header>
         <hr>
+
+        <!-- Picnic class, makes forms look nice -->
         <article class="card">
             <header>
                 <h2>Log In</h2>
             </header>
             <footer>
+                <!-- With OTP, user only needs to provide their email. Not very secure, but better than dealing with OAUTH -->
                 <fieldset class="flex">
                     <label><input type="email" placeholder="Email" id="email" required minlength="3"></label>
                 </fieldset>
@@ -61,6 +67,7 @@
             </footer>
         </article>
 
+        <!-- Modal/Popup for user to enter OTP -->
         <div class="modal">
             <input id="modal_1" type="checkbox">
             <label for="modal_1" class="overlay"></label>
@@ -80,33 +87,44 @@
                 </footer>
             </article>
         </div>
+
     </body>
     <script>
+        // Constants for each button/field
         const emailInput = document.getElementById('email');
         const loginButton = document.getElementById('loginBtn');
         const otpInput = document.getElementById('otp');
         const otpButton = document.getElementById('otpBtn');
         const modalCheckbox = document.getElementById('modal_1');
 
+        // Variable to store the current email which is used for OTP verification
         let currentEmail = '';
 
+        // RegEx that validates if the input is a valid email format (must contain '@' and a domain)
         function validateEmail(email) {
             return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
         }
 
+        // On click event for the login button
         loginButton.addEventListener('click', async (e) => {
+            // Prevent the default form submission
             e.preventDefault();
+            // Trim the input for sanitization (ensure no leading/trailing spaces)
             const email = emailInput.value.trim();
+            // If the email is invalid, return a sweet alert (swal)
             if (!validateEmail(email)) {
                 swal('Invalid Email', 'Please enter a valid email address.', 'error');
                 return;
             }
+            // Otherwise, send a POST request to the /sendOTP endpoint, along with the user provided email
             const res = await fetch('/sendOTP', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email })
             });
+            // Store the response
             const data = await res.json();
+            // If it was a success, update the currentEmail and open the modal
             if (data.status === 'success') {
                 currentEmail = email;
                 modalCheckbox.checked = true;
@@ -115,20 +133,27 @@
             }
         });
 
+        // On click event for the OTP verification button
         otpButton.addEventListener('click', async (e) => {
+            // Prevent the default form submission
             e.preventDefault();
 
+            // Store the code that the user entered as a constant
             const code = otpInput.value.trim();
+            // If there is no code, exit early and alert the user.
             if (!code) {
                 swal('Missing OTP', 'Please enter the OTP sent to your email.', 'warning');
                 return;
             }
+            // Otherwise, send a POST request to the /verifyOTP endpoint, along with the user provided code and the current email
             const rest = await fetch('/verifyOTP', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ code, email: currentEmail })
             });
+            // Store the response
             const data = await rest.json();
+            // If the OTP code provided matches the server's, redirect the user to the home page
             if (data.status === 'success') {
                 window.location.href = '/home';
             } else {

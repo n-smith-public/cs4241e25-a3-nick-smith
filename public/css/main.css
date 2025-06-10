@@ -175,3 +175,35 @@ td {
 #editModal .buttons {
   margin-top: 5%;
 }
+
+#editModal #contents {
+  background: var(--base);
+  padding: 24px;
+  border-radius: 8px;
+  min-width: 300px;
+}
+
+#deleteModal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+#deleteModal #contents {
+  background: var(--base);
+  padding: 24px;
+  border-radius: 8px;
+  min-width: 300px;
+}
+
+#confirmDeleteBtn {
+  background: var(--highlight);
+  color: var(--option);
+}
