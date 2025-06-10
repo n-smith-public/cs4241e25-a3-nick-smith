@@ -1,5 +1,8 @@
 // FRONT-END (CLIENT) JAVASCRIPT HERE
 
+let selectedTasks = new Set();
+let loadedTasks = [];
+
 const submit = async function( event ) {
   // stop form submission from trying to load
   // a new .html page for displaying results...
@@ -87,17 +90,27 @@ const loadTasks = async function() {
 
     // Set the HTML for the row. Deadlines are in British format (DD/MM/YYYY). The deadline is passed as an attribute as it is updated dynamically. The checkbox is created here for completion.
     row.innerHTML = `
+      <td><input type="checkbox" class="select-task" data-id="${entry.id}"></td>
       <td>${entry.taskName}</td>
       <td>${entry.taskDescription}</td>
       <td>${entry.taskDueDate ? new Date(entry.taskDueDate).toLocaleString("en-GB") : ""}</td>
       <td>${priorityText}</td>
       <td class="deadline" data-id="${entry.id}"></td>
-      <td>
-        <input type="checkbox" class="complete-task" data-id="${entry.id}" ${entry.completed ? "checked" : ""}>
     `;
 
     // Add the row to the task list table.
     taskList.appendChild(row);
+  });
+
+  loadedTasks = tasks;
+  
+  document.querySelectorAll(".select-task").forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+      const id = this.getAttribute("data-id");
+      if (this.checked) { selectedTasks.add(id); }
+      else { selectedTasks.delete(id); }
+      updateActionMenu();
+    });
   });
 
   // Checks if a task has been checked off as completed/incomplete, and updates the data appropriately.
@@ -114,11 +127,22 @@ const loadTasks = async function() {
   window.countdownInterval = setInterval(updateDeadlines, 1000);
 }
 
+function updateActionMenu() {
+  const menu = document.getElementById("actionMenu");
+  const editBtn = document.getElementById("editBtn");
+  if (selectedTasks.size > 0) {
+    menu.style.display = "flex";
+    editBtn.style.display = selectedTasks.size === 1 ? "inline-block" : "none";
+  } else {
+    menu.style.display = "none";
+  }
+};
+
 function completionStatus() {
   document.querySelectorAll(".complete-task").forEach(checkbox => {
     checkbox.addEventListener("change", async function () {
       // Get the ID of the task
-      const id = Number(this.getAttribute("data-id"));
+      const id = this.getAttribute("data-id");
       // Gets whether the task is now completed or incomplete
       const completed = this.checked;
       // Send a POST request to the /complete endpoint
@@ -217,3 +241,129 @@ window.onload = function() {
     loadTasks().then();
   }
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+  const editBtn = document.getElementById("editBtn");
+  if (editBtn) {
+    editBtn.addEventListener("click", function() {
+      if (selectedTasks.size !== 1) return;
+      const id = Array.from(selectedTasks)[0];
+      const task = loadedTasks.find(t => t.id === id);
+      if (!task) return;
+
+      // Populate the modal
+      document.getElementById('editTaskName').value = task.taskName;
+      document.getElementById('editTaskDescription').value = task.taskDescription;
+      document.getElementById('editTaskDueDate').value = task.taskDueDate ? new Date(task.taskDueDate).toISOString().slice(0,16) : '';
+      document.getElementById('editTaskPriority').value = task.taskPriority.toLowerCase();
+
+      document.getElementById('editModal').style.display = 'flex';
+
+      document.getElementById('editTaskForm').setAttribute("data-id", id);
+
+      document.getElementById('cancelEditBtn').onclick = function() {
+        document.getElementById('editModal').style.display = 'none';
+      }
+    });
+  };
+
+  const editTaskForm = document.getElementById('editTaskForm');
+  if (editTaskForm) {
+    editTaskForm.onsubmit = async function(e) {
+      e.preventDefault();
+
+      const id = this.getAttribute("data-id");
+      const updatedTask = {
+        id,
+        taskName: document.getElementById('editTaskName').value,
+        taskDescription: document.getElementById('editTaskDescription').value,
+        taskDueDate: document.getElementById('editTaskDueDate').value,
+        taskPriority: document.getElementById('editTaskPriority').value
+      };
+
+      await fetch('/editTask', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedTask)
+      });
+      document.getElementById('editModal').style.display = 'none';
+      selectedTasks.clear();
+      updateActionMenu();
+      loadTasks();
+    }
+  }
+
+  const markCompleteBtn = document.getElementById("markCompleteBtn");
+  if (markCompleteBtn) {
+    markCompleteBtn.addEventListener("click", async function() {
+      if (selectedTasks.size === 0) return;
+      const allCompleted = Array.from(selectedTasks).every(id => {
+        const task = loadedTasks.find(t => t.id === id);
+        return task && task.completed;
+      });
+     for (const id of selectedTasks) {
+      await fetch('/complete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id, completed: !allCompleted })
+      });
+     }
+     selectedTasks.clear();
+     updateActionMenu();
+     loadTasks();
+      swal("Tasks Updated", allCompleted ? "Selected tasks have been marked as incomplete!" : "Selected tasks have been marked as completed!", "success");
+    });
+  };
+
+  const deleteBtn = document.getElementById("deleteBtn");
+  const deleteModal = document.getElementById("deleteModal");
+  const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+  const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+
+  if (deleteBtn && confirmDeleteBtn && cancelDeleteBtn && deleteModal) {
+    deleteBtn.addEventListener("click", function() {
+      deleteModal.style.display = 'flex';
+    });
+
+    cancelDeleteBtn.addEventListener("click", function() {
+      deleteModal.style.display = 'none';
+    });
+
+    confirmDeleteBtn.addEventListener("click", async function() {
+      const ids = Array.from(selectedTasks);
+      await fetch('/deleteTask', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ ids })
+      });
+      deleteModal.style.display = 'none';
+      selectedTasks.clear();
+      updateActionMenu();
+      loadTasks();
+      swal("Tasks Deleted", "The selected tasks have been deleted!", "success");
+    });
+  }
+
+  const selectAll = document.getElementById("selectAll");
+  if (selectAll) {
+    selectAll.addEventListener("change", function() {
+      const checkboxes = document.querySelectorAll(".select-task");
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAll.checked;
+        const id = checkbox.getAttribute("data-id");
+        if (selectAll.checked) {
+          selectedTasks.add(id);
+        } else {
+          selectedTasks.delete(id);
+        }
+      });
+      updateActionMenu();
+    });
+  }
+});

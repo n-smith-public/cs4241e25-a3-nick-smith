@@ -1,11 +1,12 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title>CS4241 Assignment 2</title>
+    <title>Task List</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="js/main.js"></script>
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
     <!-- This is used for an alert on marking a task as completed. -->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     
@@ -14,31 +15,104 @@
   </head>
   <body>
     <!-- Exact same as in index.html -->
-    <header>
-      <div id="header-logo">
-        <div style="display: flex; align-items: center;">
-          <img id="logo" src="media/Magnolia.png" alt="Magnolia" style="height: 50px; width: auto; margin-right: 10px;">
-          <h1>Magnolia</h1>
-        </div>
+   <header>
+      <div id="header-logo" style="display: flex; align-items: center;">
+        <img id="logo" src="media/Magnolia.png" alt="Magnolia" style="height: 50px; width: auto; margin-right: 10px;">
+        <h1>Magnolia</h1>
       </div>
-      <p>
-        Magnolia Task Manager - Return to <a href="/">home</a> to add new task.
-      </p>
+      <div style="display: flex; align-items: center;">
+        <span id="greeting" style="margin-right: 20px;"></span>
+        <button id="logoutBtn" style="background-color: #ff5800; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Logout</button>
+      </div>
     </header>
     <hr>
    
-    <!-- This table automatically pulls all of the tasks and displays them to the user. Not fully optimised for mobile usage, but would require some weird changes to make it work as desired. -->
-    <table id="taskList">
+    <table class="pure-table pure-table-striped" id="taskList">
+      <thead>
         <tr>
-            <th>Task Name</th>
-            <th>Task Description</th>
-            <th>Due Date</th>
-            <th>Priority</th>
-            <th>Deadline</th>
-            <th>Completed</th>
+          <th><input type="checkbox" id="selectAll"></th>
+          <th>Task Name</th>
+          <th>Description</th>
+          <th>Due Date</th>
+          <th>Priority</th>
+          <th>Deadline</th>
         </tr>
-
-        <tbody id="taskTableBody"></tbody>
+      </thead>
+      <tbody id="taskTableBody"></tbody>
     </table>
+
+    <!--Action Menu -->
+    <div id="actionMenu" style="display: none;">
+      <button id="markCompleteBtn" class="pure-button pure-button-primary">Mark Completed</button>
+      <button id="editBtn" class="pure-button">Edit</button>
+      <button id="deleteBtn" class="button-error pure-button">Delete</button>
+    </div>    
+    <div id="deleteModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:2000;">
+      <div style="background:#fff; padding:24px; border-radius:8px; min-width:300px;">
+        <p>Are you sure you want to delete the selected task(s)?</p>
+        <button id="confirmDeleteBtn" class="button-error pure-button" style="background:#d9534f;color:#fff;">Yes, Delete</button>
+        <button id="cancelDeleteBtn" class="pure-button">Cancel</button>
+      </div>
+    </div>
+    <div id="editModal" class="modal" style="display:none;">
+      <div style="background:#fff; padding:24px; border-radius:8px; min-width:300px;">
+        <form id="editTaskForm">
+          <label>Task Name: <input type="text" id="editTaskName"></label><br>
+          <label>Description: <input type="text" id="editTaskDescription"></label><br>
+          <label>Due Date: <input type="datetime-local" id="editTaskDueDate"></label><br>
+          <label>Priority:
+            <select id="editTaskPriority">
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
+          </label><br>
+          <div class="buttons">
+            <button type="submit" class="pure-button pure-button-primary">Save</button>
+            <button type="button" id="cancelEditBtn" class="pure-button">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <footer>
+      <button id="addTask">Add New Tasks</button>
+      <hr>
+      <p>
+        Magnolia Task Manager
+      </p>
+      <p>
+        <small>CS4241 Assignment 3</small>
+      </p>
+    </footer>
   </body>
+  <script>
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const greeting = document.getElementById('greeting');
+      const logoutBtn = document.getElementById('logoutBtn');
+
+      // Get the username from the cookie
+      const displayName = getCookie('displayName');
+      if (displayName) {
+        greeting.textContent = `Welcome, ${displayName}, to Magnolia! Magnolia is the premiere web application for managing your tasks. What are you waiting for? Start today!`;
+      } else {
+        greeting.textContent = 'Welcome!';
+      }
+    });
+
+    logoutBtn.addEventListener('click', () => {
+      window.location.replace('/logout');
+    });
+
+    addTask.addEventListener('click', (event) => {
+      event.preventDefault();
+      window.location.href = '/home';
+    });
+  </script>
 </html>

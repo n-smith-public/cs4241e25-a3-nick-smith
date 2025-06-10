@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Register</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic">
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <style>
+            html {
+                font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+            }
+
+            header {
+                margin-left: 10%;
+                background-color: #f5eed0;
+            }
+
+            .card {
+                margin-top: 5%;
+                margin-left: 10%;
+                width: 75%;
+                background-color: #f5eed0;
+            }
+
+            .card header {
+                margin-left: 0;
+            }
+
+            body {
+                width: 100%;
+                background-color: #f5eed0;
+            }
+
+            .card button {
+                width: fit-content;
+                background-color: #ff5800;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div id="header-logo">
+                <div style="display: flex; align-items: center;">
+                    <img id="logo" src="media/Magnolia.png" alt="Magnolia" style="height: 50px; width: auto; margin-right: 10px;">
+                    <h1>Magnolia</h1>
+                </div>
+            </div>
+            <p>Welcome to Magnolia. If you already have an account, please <a href="/login">login</a> to continue.</p>
+        </header>
+        <hr>
+        <article class="card">
+            <header>
+                <h2>Register</h2>
+            </header>
+            <footer>
+                <fieldset class="flex">
+                    <label><input type="text" placeholder="Display Name" id="display" required minlength="3"></label>
+                    <label><input type="email" placeholder="Email" id="email" required minlength="3"></label>
+                </fieldset>
+                <button id="registerBtn" class="stack icon-paper-plane">Register</button>
+            </footer>
+        </article>
+
+        <div class="modal">
+            <input id="modal_1" type="checkbox">
+            <label for="modal_1" class="overlay"></label>
+            <article>
+                <header>
+                    <h2>Enter OTP</h2>
+                    <label for="modal_1" class="close">&times;</label>
+                </header>
+                <section class="content">
+                    <p>We have sent a One-Time Password (OTP) to the email address you provided. Please enter it below: </p>
+                </section>
+                <footer>
+                    <fieldset class="flex">
+                        <label><input type="text" placeholder="OTP" id="otp" required minlength="8"></label>
+                    </fieldset>
+                    <button id="otpBtn" class="stack">Submit OTP</button>
+                </footer>
+            </article>
+        </div>
+    </body>
+    <script>
+        const displayInput = document.getElementById('display');
+        const emailInput = document.getElementById('email');
+        const loginButton = document.getElementById('registerBtn');
+        const otpInput = document.getElementById('otp');
+        const otpButton = document.getElementById('otpBtn');
+        const modalCheckbox = document.getElementById('modal_1');
+
+        let currentEmail = '';
+
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        loginButton.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const displayName = displayInput.value.trim();
+            const email = emailInput.value.trim();
+            if (!displayName || displayName.length < 3) {
+                swal('Invalid Display Name', 'Please enter a valid display name with at least 3 characters.', 'error');
+                return;
+            }
+            if (!validateEmail(email)) {
+                swal('Invalid Email', 'Please enter a valid email address.', 'error');
+                return;
+            }
+            const res = await fetch('/registerUser', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ displayName, email })
+            });
+            const contentType = res.headers.get('Content-Type');
+            if (contentType && contentType.includes('application/json')) {
+                const data = await res.json();
+                if (data.status === 'success') {
+                    currentEmail = email;
+                    modalCheckbox.checked = true;
+                } else {
+                    swal('Error', data.message || 'Failed to register. Please try again.', 'error');
+                }
+                return;
+            } else {
+                const text = await res.text();
+                swal('Error', text || 'Failed to register. Please try again.', 'error');
+            }
+        });
+
+        otpButton.addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            const code = otpInput.value.trim();
+            if (!code) {
+                swal('Missing OTP', 'Please enter the OTP sent to your email.', 'warning');
+                return;
+            }
+            const rest = await fetch('/verifyOTP', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code, email: currentEmail })
+            });
+            const data = await rest.json();
+            if (data.status === 'success') {
+                window.location.href = '/home';
+            } else {
+                swal('Error', data.message || 'Failed to verify OTP. Please try again.', 'error');
+            }
+        });
+    </script>
+</html>

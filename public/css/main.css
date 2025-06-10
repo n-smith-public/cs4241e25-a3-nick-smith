@@ -29,6 +29,32 @@ body {
   justify-content: space-between;
 }
 
+#settings {
+  position: fixed;
+  top: 24px;
+  right: 32px;
+  z-index: 2001;
+}
+
+#settings btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 2rem;
+}
+
+#settingsMenu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 40px;
+  background-color: var(--base);
+  border: 1px solid var(--option);
+  border-radius: 0.25rem;
+  padding: 1rem;
+  min-width: 100px;
+}
+
 /* Task Submission */
 #taskForm {
   display: block;
@@ -123,4 +149,29 @@ td {
 .urgent {
   color: var(--highlight);
   font-weight: bold;
+}
+
+#actionMenu {
+  position: fixed; 
+  bottom: 20px;
+  align-items: center;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index:1000;
+}
+
+#editModal {
+  position:fixed; 
+  top:0; 
+  left:0; 
+  width:100vw; 
+  height:100vh; 
+  background:rgba(0,0,0,0.5); 
+  align-items:center; 
+  justify-content:center; 
+  z-index:2000
+}
+
+#editModal .buttons {
+  margin-top: 5%;
 }

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Magnolia Login OTP</title>
+        <style>
+            html {
+                background-color: #f5eed0;
+                font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                font-size: 15px;
+                color: #000;
+            }
+
+            body {
+                width: 75%;
+                margin: auto;
+                padding: 15px;
+                line-height: 1.5;
+            }
+
+            .header-logo {
+                display: flex;
+                align-items: center;
+                margin: auto;
+                justify-content: space-between;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div id="header-logo">
+                <div style="display: flex; align-items: center;">
+                    <img id="logo" src="https://files.catbox.moe/cdl3hc.png" alt="Magnolia" style="height: 50px; width: auto; margin-right: 10px;">
+                    <h1>Magnolia</h1>
+                </div>
+            </div>
+        </header>
+        <hr>
+        <p>Hello! You have attempted to login to Magnolia. If this was not done by you, please ignore this email.</p>
+        <p>If this was you, please enter the following One-Time Password (OTP) into the prompt on Magnolia.</p>
+        <p>Please note that this code will expire after <b>5 minutes.</b></p>
+        <p class="confCode"><strong>{{otp}}</strong></p>
+        <hr>
+        <footer>
+            <p>This email was sent automatically. Please do not reply.</p>
+        </footer>
+    </body>
+</html>

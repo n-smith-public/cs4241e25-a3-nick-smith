@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title>CS4241 Assignment 2</title>
+    <title>Add New Task</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="js/main.js"></script>
@@ -13,17 +13,24 @@
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
   </head>
   <body>
+    <div id="settings">
+      <button id="btn">
+          <span role="img" aria-label="Settings" style="font-size: 24px;">&#9881;</span>
+      </button>
+      <div id="settingsMenu">
+        <button id="displayName" class="pure-button">Change Display Name</button>
+      </div>
+    </div>
     <!-- Header of the page, shared across all pages -->
     <header>
-      <div id="header-logo">
-        <div style="display: flex; align-items: center;">
-          <img id="logo" src="media/Magnolia.png" alt="Magnolia" style="height: 50px; width: auto; margin-right: 10px;">
-          <h1>Magnolia</h1>
-        </div>
+      <div id="header-logo" style="display: flex; align-items: center;">
+        <img id="logo" src="media/Magnolia.png" alt="Magnolia" style="height: 50px; width: auto; margin-right: 10px;">
+        <h1>Magnolia</h1>
       </div>
-      <p>
-        Welcome to Magnolia, the premiere web application for managing your tasks. What are you waiting for? Start today!
-      </p>
+      <div style="display: flex; align-items: center;">
+        <span id="greeting" style="margin-right: 20px;"></span>
+        <button id="logoutBtn" style="background-color: #ff5800; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Logout</button>
+      </div>
     </header>
     <hr>
     <!-- Task Submission Form. All entries are required. -->
@@ -57,8 +64,74 @@
         Magnolia Task Manager - View your <a href="/tasks">tasks</a>.
       </p>
       <p>
-        <small>CS4241 Assignment 2</small>
+        <small>CS4241 Assignment 3</small>
       </p>
     </footer>
   </body>
+  <script>
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const greeting = document.getElementById('greeting');
+      const logoutBtn = document.getElementById('logoutBtn');
+
+      // Get the username from the cookie
+      const displayName = getCookie('displayName');
+      if (displayName) {
+        greeting.textContent = `Welcome, ${displayName}, to Magnolia! Magnolia is the premiere web application for managing your tasks. What are you waiting for? Start today!`;
+      } else {
+        greeting.textContent = 'Welcome!';
+      }
+
+      const gear = document.getElementById('btn');
+      const dropdown = document.getElementById('settingsMenu');
+      const displayNameBtn = document.getElementById('displayName');
+
+      if (gear && dropdown) {
+        gear.addEventListener('click', function(e) {
+          e.stopPropagation();
+          dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', function() {
+          dropdown.style.display = 'none';
+        });
+
+        dropdown.addEventListener('click', function(e) {
+          e.stopPropagation();
+        });
+      }
+
+      if (displayNameBtn) {
+        displayNameBtn.addEventListener('click', async function()  {
+          const currentName = getCookie('displayName') || '';
+          const newName = prompt('Enter your new display name:', currentName);
+          if (newName && newName.trim() && newName !== currentName) {
+            const res = await fetch('/updateDisplayName', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ displayName: newName.trim() })
+            });
+            const result = await res.json();
+            if (result.status === 'success') {
+              document.cookie = `displayName=${encodeURIComponent(newName.trim())}; path=/`;
+              swal('Success', 'Display name updated successfully!', 'success').then(() => location.reload());
+            } else {
+              swal('Error', 'Failed to update display name. Please try again.', 'error');
+            }
+          }
+        });
+      }
+    });
+
+    logoutBtn.addEventListener('click', () => {
+      window.location.replace('/logout');
+    });
+  </script>
 </html>
