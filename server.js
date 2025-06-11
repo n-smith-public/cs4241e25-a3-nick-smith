@@ -79,10 +79,15 @@ app.use('/media', (req, res, next) => {
 }, express.static(path.join(__dirname, 'public', '/media')));
 app.use('/js', express.static(path.join(__dirname, 'public', '/js')));
 
+/* -- Robots.txt for Lighthouse -- */
+app.get('/robots.txt', (req, res) => {
+    res.send(path.join(__dirname, 'robots.txt'));
+});
+
 /* -- Prevent user from accessing protected pages if not logged in -- */
 app.use((req, res, next) => {
     // Anything that can be publicly accessed, such as registration/login pages and the associated endpoints, as well as static files
-    const publicEndpoints = ['/login', '/register', '/sendOTP', '/verifyOTP', '/registerUser' ];
+    const publicEndpoints = ['/login', '/register', '/sendOTP', '/verifyOTP', '/registerUser', '/robots.txt' ];
     const staticElements = req.path.startsWith('/css') || req.path.startsWith('/media') || req.path.startsWith('/js');
     // If the request is for one of these, pass the user through.
     if (publicEndpoints.includes(req.path) || staticElements ) {
