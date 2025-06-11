@@ -82,7 +82,7 @@ app.use('/js', express.static(path.join(__dirname, 'public', '/js')));
 /* -- Robots.txt for Lighthouse -- */
 app.get('/robots.txt', (req, res) => {
     res.type('text/plain');
-    res.send(path.join(__dirname, 'robots.txt'));
+    res.sendFile(path.join(__dirname, 'robots.txt'));
 });
 
 /* -- Prevent user from accessing protected pages if not logged in -- */
