@@ -1,5 +1,3 @@
 User-agent: *
-Disallow: /
-
-User-agent: AbsBot-Google
-Disallow: /
+Disallow: 
+Disallow: /node_modules/
