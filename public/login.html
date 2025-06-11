@@ -41,13 +41,38 @@
             }
 
             a {
-                color: #ff5800;
+                color: #6b9dde;
                 text-decoration: none;
                 font-weight: bold;
             }
 
             a:hover {
                 text-decoration: underline;
+                animation: linkHover 1s forwards;
+            }
+
+            a:not(:hover) {
+                animation: linkHoverOut 1s forwards;
+            }
+
+            @keyframes linkHover {
+                0% {
+                    color: #6b9dde;
+                }
+
+                100% {
+                    color: #ff5800;
+                }
+            }
+
+            @keyframes linkHoverOut {
+                0% {
+                    color: #ff5800;
+                }
+
+                100% {
+                    color: #6b9dde;
+                }
             }
         </style>
     </head>

@@ -3,6 +3,7 @@
   --base: #f5eed0;
   --option: #000;
   --highlight: #ff5800;
+  --links: #6b9dde;
 }
 
 /* Site-wide properties */
@@ -19,6 +20,41 @@ body {
   margin: auto;
   padding: 15px;
   line-height: 1.5;
+}
+
+a {
+  color: var(--links);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a:hover {
+  text-decoration: underline;
+  animation: linkHover 1s forwards;
+}
+
+a:not(:hover) {
+  animation: linkHoverOut 1s forwards;
+}
+
+@keyframes linkHover {
+  0% {
+    color: var(--links);
+  }
+
+  100% {
+    color: var(--highlight);
+  }
+}
+
+@keyframes linkHoverOut {
+  0% {
+    color: var(--highlight);
+  }
+
+  100% {
+    color: var(--links);
+  }
 }
 
 /* Header Content */
