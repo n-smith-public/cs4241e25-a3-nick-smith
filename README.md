@@ -1,35 +1,3 @@
-Acheivements
----
-
-Below are suggested technical and design achievements. You can use these to help boost your grade up to an A and customize the 
-assignment to your personal interests, for a maximum twenty additional points and a maximum grade of a 100%. 
-These are recommended acheivements, but feel free to create/implement your own... just make sure you thoroughly describe what you did in your README, 
-why it was challenging, and how many points you think the achievement should be worth. 
-ALL ACHIEVEMENTS MUST BE DESCRIBED IN YOUR README IN ORDER TO GET CREDIT FOR THEM.
-
-*Technical*
-- (10 points) Implement OAuth authentication, perhaps with a library like [passport.js](http://www.passportjs.org/). 
-*You must either use Github authenticaion or provide a username/password to access a dummy account*. 
-Course staff cannot be expected, for example, to have a personal Facebook, Google, or Twitter account to use when grading this assignment. 
-Please contact the course staff if you have any questions about this. THIS IS THE HARDEST ACHEIVEMENT OFFERED IN WEBWARE. You have been warned!  
-- (5 points) Instead of Glitch, host your site on a different service. Find a service that is reputable and has a free tier. Post your findings on Slack in the #assignment3 channel. DO NOT feel compelled to purchase a paid tier from any service, although if you already have one, you are welcome to use it. Make sure to describe this a bit in your README. What was better about using the service you chose as compared to Glitch? What (if anything) was worse? 
-- (5 points) Get 100% (not 98%, not 99%, but 100%) in all four lighthouse tests required for this assignment.  
-
-*Design/UX*
-- (10 points) Make your site accessible using the [resources and hints available from the W3C](https://www.w3.org/WAI/), Implement/follow twelve tips from their [tips for writing](https://www.w3.org/WAI/tips/writing/), [tips for designing](https://www.w3.org/WAI/tips/designing/), and [tips for development](https://www.w3.org/WAI/tips/developing/). *Note that all twelve must require active work on your part*. 
-For example, even though your page will most likely not have a captcha, you don't get this as one of your twelve tips to follow because you're effectively 
-getting it "for free" without having to actively change anything about your site. 
-Contact the course staff if you have any questions about what qualifies and doesn't qualify in this regard. 
-List each tip that you followed and describe what you did to follow it in your site.
-- (5 points) Describe how your site uses the CRAP principles in the Non-Designer's Design Book readings. 
-Which element received the most emphasis (contrast) on each page? 
-How did you use proximity to organize the visual information on your page? 
-What design elements (colors, fonts, layouts, etc.) did you use repeatedly throughout your site? 
-How did you use alignment to organize information and/or increase contrast for particular elements. 
-Write a paragraph of at least 125 words *for each of four principles* (four paragraphs, 500 words in total). 
-
-
-
 ## Magnolia
 
 https://a3.greenbueller.com
@@ -60,7 +28,9 @@ I made use of the following Express packages in this project:
 ## Technical Achievements
 - **Tech Achievement 1**: Use of .env file
 The .env file, as briefly explained in the Dotenv package section above, made this project a lot better. My .env file is contained within my .gitignore file so it is only stored on my local machine that I develop on, which prevents anyone from finding tokens that could be used maliciously. For example, my MongoDB URI is stored in the .env file. If this URI file were to be publicly viewable (ie. hardcoded in the server.js file), anyone on the internet could then connect and read/delete/modify data on the database, which would obviously be an issue.
-- **Tech Achievement 2**: 
+- **Tech Achievement 2**: Achieving 100% on all four lighthouse tests
+- **Tech Achievement 3**: Using a platform other than Glitch
+I am not sure if this fully counts as an achievement as I have been using Render for the duration of this class, but I have continued using it. It is my platform of choice for my website as well.
 
 ### Design/Evaluation Achievements
 - **Design Achievement 1**: I followed the following tips from the W3C Web Accessibility Initiative...
